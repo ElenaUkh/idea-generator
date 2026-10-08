@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Генератор идей для постов — городские пространства</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F5F3EF;
+      --card: #FFFFFF;
+      --border: #DEDAD3;
+      --text: #26312D;
+      --accent: #365B4B;
+      --terra: #B96E4E;
+      --muted: #5C6864;
+      --focus: #365B4B;
+      --radius: 12px;
+      --grid: rgba(54, 91, 75, 0.07);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+
+    body {
+      font-family: "Golos Text", Arial, sans-serif;
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 40px 40px;
+      color: var(--text);
+      font-size: 17px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .skip {
+      position: absolute;
+      left: -999px;
+      top: 8px;
+      background: var(--card);
+      padding: 8px 12px;
+      z-index: 10;
+    }
+
+    .skip:focus {
+      left: 12px;
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(245, 243, 239, 0.92);
+      backdrop-filter: blur(8px);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 64px;
+      padding: 8px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .mark {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+    }
+
+    .brand > span {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-name {
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .coords {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    nav {
+      display: flex;
+      gap: 6px;
+    }
+
+    .nav-btn {
+      min-height: 44px;
+      padding: 8px 14px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      font-size: 15px;
+      border-radius: var(--radius);
+      cursor: pointer;
+    }
+
+    .nav-btn[aria-current="page"] {
+      border-color: var(--border);
+      background: var(--card);
+      color: var(--accent);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 180px;
+      gap: 32px;
+      align-items: start;
+      padding: 48px 0 36px;
+    }
+
+    h1 {
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      max-width: 18ch;
+    }
+
+    .lede {
+      max-width: 62ch;
+      color: var(--muted);
+    }
+
+    .atlas {
+      width: 100%;
+      height: auto;
+      color: var(--accent);
+      opacity: 0.85;
+    }
+
+    .settings {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 28px;
+    }
+
+    .settings legend {
+      font-weight: 600;
+      font-size: 15px;
+      padding: 0 6px;
+      color: var(--accent);
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    select {
+      min-height: 44px;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      color: var(--text);
+      font: inherit;
+      font-size: 16px;
+    }
+
+    .tools {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+
+    .card-index {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--terra);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .card h2 {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 16px;
+      flex: 1;
+      margin-bottom: 18px;
+    }
+
+    .btn {
+      min-height: 44px;
+      padding: 10px 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #fff;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-ghost {
+      background: var(--card);
+      color: var(--accent);
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .result {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 48px;
+      min-height: 220px;
+      scroll-margin-top: 80px;
+    }
+
+    .result-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .result-head h2 {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .hint,
+    .error,
+    .status {
+      color: var(--muted);
+    }
+
+    .error {
+      color: #8a3b2a;
+      background: #f8ece7;
+      border-radius: var(--radius);
+      padding: 12px 14px;
+    }
+
+    .loader {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--accent);
+    }
+
+    .spinner {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .idea {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+    }
+
+    .idea:last-child {
+      border-bottom: 0;
+    }
+
+    .idea h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .meta {
+      font-size: 13px;
+      color: var(--terra);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .frames {
+      list-style: none;
+      margin: 8px 0 10px;
+      padding-left: 0;
+    }
+
+    .frames li {
+      padding: 6px 0 6px 28px;
+      position: relative;
+    }
+
+    .frames li::before {
+      content: attr(data-n);
+      position: absolute;
+      left: 0;
+      top: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 16px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .fav-list {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+
+    .fav-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+
+    .fav-item header {
+      position: static;
+      background: none;
+      border: 0;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 20px 0 32px;
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .hidden,
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 720px) {
+      .coords {
+        display: none;
+      }
+
+      .brand-name {
+        font-size: 14px;
+        line-height: 1.2;
+        max-width: 12em;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .settings-grid,
+      .tools,
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .atlas {
+        display: none;
+      }
+
+      h1 {
+        font-size: clamp(26px, 7vw, 30px);
+        max-width: none;
+      }
+
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        margin-bottom: 10px;
+        padding: 8px;
+      }
+
+      td {
+        border: 0;
+        padding: 6px 8px;
+      }
+
+      td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        margin-bottom: 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#result">К результату генерации</a>
+  <header>
+    <div class="wrap header-inner">
+      <a class="brand" href="#top">
+        <span class="mark" aria-hidden="true">N</span>
+        <span>
+          <span class="brand-name">Генератор идей для постов</span>
+          <span class="coords">Атлас · 55°N · городская среда</span>
+        </span>
+      </a>
+      <nav aria-label="Разделы">
+        <button class="nav-btn" type="button" id="nav-gen" aria-current="page">Генератор</button>
+        <button class="nav-btn" type="button" id="nav-fav">Избранное</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <div class="wrap">
+      <div id="view-gen">
+      <section class="hero" aria-labelledby="hero-title">
+        <div>
+          <h1 id="hero-title">Идеи контента о городе и людях</h1>
+          <p class="lede">Темы постов, сценарии сторис и контент-план для архитекторов городских пространств. Рассказывайте о своей работе понятно — от наблюдений за городской жизнью до проектных решений.</p>
+        </div>
+        <svg class="atlas" viewBox="0 0 180 180" role="img" aria-label="Контурная схема квартала">
+          <rect x="8" y="8" width="164" height="164" fill="none" stroke="currentColor" stroke-width="1"/>
+          <path d="M28 40 H92 V88 H28 Z M100 40 H152 V70 H100 Z M100 78 H152 V132 H100 Z M28 96 H92 V152 H28 Z M100 140 H152 V152 H100 Z" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="60" cy="64" r="6" fill="none" stroke="#B96E4E" stroke-width="1.4"/>
+          <path d="M40 152 L40 28 M28 120 H152" stroke="currentColor" stroke-width="0.6" opacity="0.5"/>
+        </svg>
+      </section>
+
+        <form class="settings" id="settings">
+          <fieldset>
+            <legend>Настройки контента</legend>
+            <div class="settings-grid">
+              <label>
+                Тип пространства
+                <select name="space" id="space">
+                  <option value="park">Парк</option>
+                  <option value="square">Площадь</option>
+                  <option value="street">Улица</option>
+                  <option value="yard">Двор</option>
+                  <option value="embankment">Набережная</option>
+                </select>
+              </label>
+              <label>
+                Аудитория
+                <select name="audience" id="audience">
+                  <option value="citizens">Горожане</option>
+                  <option value="peers">Коллеги-архитекторы</option>
+                  <option value="clients">Заказчики и девелоперы</option>
+                  <option value="admin">Городская администрация</option>
+                  <option value="students">Студенты и молодые специалисты</option>
+                </select>
+              </label>
+              <label>
+                Цель публикации
+                <select name="goal" id="goal">
+                  <option value="educate">Просвещение</option>
+                  <option value="engage">Вовлечение аудитории</option>
+                  <option value="authority">Экспертный статус</option>
+                  <option value="projects">Привлечение проектов</option>
+                </select>
+              </label>
+              <label>
+                Тон текста
+                <select name="tone" id="tone">
+                  <option value="calm">Спокойный экспертный</option>
+                  <option value="alive">Живой наблюдательный</option>
+                  <option value="critical">Критичный</option>
+                  <option value="inspire">Вдохновляющий</option>
+                </select>
+              </label>
+            </div>
+          </fieldset>
+        </form>
+
+        <section class="tools" aria-label="Инструменты генерации">
+          <article class="card">
+            <p class="card-index">01 · Посты</p>
+            <h2>5 идей постов для эксперта — архитектора городских пространств</h2>
+            <p>Пять тем с заголовком, кратким содержанием и форматом публикации. Например: «Почему одни площади становятся местами встреч, а другие остаются пустыми?»</p>
+            <button class="btn" type="button" data-gen="posts">Сгенерировать идеи постов</button>
+          </article>
+          <article class="card">
+            <p class="card-index">02 · Сторис</p>
+            <h2>3 идеи сторис</h2>
+            <p>Три сценария: опрос о городской среде, мини-разбор пространства и закулисье проектирования. Для каждого — последовательность кадров и вопрос аудитории.</p>
+            <button class="btn" type="button" data-gen="stories">Сгенерировать сторис</button>
+          </article>
+          <article class="card">
+            <p class="card-index">03 · План</p>
+            <h2>Контент-план на неделю</h2>
+            <p>Таблица на семь дней: тема, формат и цель публикации. В плане чередуются экспертные разборы, наблюдения за городом, проекты и вовлекающий контент.</p>
+            <button class="btn" type="button" data-gen="plan">Создать контент-план</button>
+          </article>
+        </section>
+      </div>
+
+      <section class="result" id="result" aria-live="polite" aria-busy="false">
+        <div class="result-head">
+          <h2 id="result-title">Результат</h2>
+          <div class="btn-row" id="result-actions" hidden>
+            <button class="btn btn-ghost" type="button" id="copy-btn">Скопировать</button>
+            <button class="btn btn-ghost" type="button" id="again-btn">Сгенерировать заново</button>
+            <button class="btn btn-ghost" type="button" id="fav-btn">В избранное</button>
+          </div>
+        </div>
+        <div id="result-body">
+          <p class="hint">Выберите настройки и нажмите одну из кнопок выше. Идеи появятся здесь — без всплывающих окон, как слой на карте.</p>
+        </div>
+      </section>
+
+      <section id="view-fav" class="hidden" aria-labelledby="fav-title">
+        <h2 id="fav-title" style="font-size:22px;margin-bottom:16px;">Избранное</h2>
+        <div class="fav-list" id="fav-list"></div>
+      </section>
+    </div>
+  </main>
+
+  <div class="wrap">
+    <footer>
+      <span>Слой 01 · городской атлас контента</span>
+      <span>Сохраняется только в этом браузере</span>
+    </footer>
+  </div>
+
+  <script>
+    const STORAGE_SETTINGS = "urban-atlas-settings";
+    const STORAGE_FAVS = "urban-atlas-favorites";
+
+    const SPACES = {
+      park: { nom: "парк", gen: "парка", dat: "парку", ins: "парком", loc: "в парке", plural: "парки", genPl: "парков" },
+      square: { nom: "площадь", gen: "площади", dat: "площади", ins: "площадью", loc: "на площади", plural: "площади", genPl: "площадей" },
+      street: { nom: "улица", gen: "улицы", dat: "улице", ins: "улицей", loc: "на улице", plural: "улицы", genPl: "улиц" },
+      yard: { nom: "двор", gen: "двора", dat: "двору", ins: "двором", loc: "во дворе", plural: "дворы", genPl: "дворов" },
+      embankment: { nom: "набережная", gen: "набережной", dat: "набережной", ins: "набережной", loc: "на набережной", plural: "набережные", genPl: "набережных" }
+    };
+
+    const AUDIENCE = {
+      citizens: "горожан",
+      peers: "коллег-архитекторов",
+      clients: "заказчиков и девелоперов",
+      admin: "сотрудников городской администрации",
+      students: "студентов и молодых специалистов"
+    };
+
+    const GOALS = {
+      educate: "объяснить устройство пространства простым языком",
+      engage: "вызвать разговор и собрать наблюдения аудитории",
+      authority: "показать метод и профессиональную оптику",
+      projects: "связать экспертизу с запросом на проект"
+    };
+
+    const TONES = {
+      calm: "спокойно и точно, без пафоса",
+      alive: "через живые сцены и детали улицы",
+      critical: "прямо называя, что не работает и почему",
+      inspire: "через возможности, которые уже есть в городе"
+    };
+
+    const FORMATS = [
+      "Длинный пост с фото",
+      "Карусель из 6–8 слайдов",
+      "Пост-вопрос с разбором",
+      "Кейс с планом «до / после»",
+      "Короткий разбор с одной схемой"
+    ];
+
+    function pick(arr, n) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy.slice(0, n);
+    }
+
+    function settings() {
+      return {
+        space: document.getElementById("space").value,
+        audience: document.getElementById("audience").value,
+        goal: document.getElementById("goal").value,
+        tone: document.getElementById("tone").value
+      };
+    }
+
+    function ctx(s) {
+      return {
+        ...SPACES[s.space],
+        who: AUDIENCE[s.audience],
+        goal: GOALS[s.goal],
+        tone: TONES[s.tone]
+      };
+    }
+
+    function postPool(c) {
+      return [
+        {
+          title: `Почему одни ${c.plural} становятся местами встреч, а другие остаются пустыми?`,
+          summary: `Разберите ${c.acc || c.nom} через сидение, тень, края и маршруты. Для ${c.who}: ${c.goal}. Текст вести ${c.tone}.`
+        },
+        {
+          title: `Что видно с первой скамейки: анатомия ${c.gen}`,
+          summary: `Опишите поле зрения, спину сидящего и то, куда смотрят люди. Покажите, как мелочи решают, останется ли человек.`
+        },
+        {
+          title: `Граница ${c.gen}: где пространство начинается на самом деле`,
+          summary: `Не от красной линии, а от первого понятного жеста — порога, навеса, смены покрытия. Объясните, почему «вход» часто теряется.`
+        },
+        {
+          title: `Кто здесь хозяин: неформальные правила ${c.gen}`,
+          summary: `Наблюдение за тем, кто занимает лучшие места, кто проходит транзитом и кто чувствует себя лишним. Для ${c.who}.`
+        },
+        {
+          title: `Дождь, жара, вечер: испытание ${c.gen} погодой`,
+          summary: `Три сценария одного дня. Что остаётся удобным, когда комфортная картинка с презентации исчезает.`
+        },
+        {
+          title: `Детская, спорт, тишина: конфликт сценариев ${c.loc}`,
+          summary: `Как слои функций мешают друг другу и как их развести без заборов. Цель — ${c.goal}.`
+        },
+        {
+          title: `Материал, который стареет красиво — и который нет`,
+          summary: `Короткий разбор покрытий и озеленения ${c.gen}: что выглядит ухоженным через три года, а что требует постоянного ремонта.`
+        },
+        {
+          title: `Схема пяти минут: как человек читает ${c.nom}`,
+          summary: `Маршрут от остановки до места, где хочется остановиться. Покажите ошибки навигации ${c.tone}.`
+        },
+        {
+          title: `Пустота как проект: зачем ${c.dat} нужны паузы`,
+          summary: `Не каждый метр должен быть «наполнен». Объясните ценность незапрограммированного места для ${c.who}.`
+        },
+        {
+          title: `Ошибки благоустройства, которые повторяют из года в год`,
+          summary: `Пять типичных решений вокруг ${c.genPl} и чем их заменить. Тон — ${c.tone}.`
+        },
+        {
+          title: `Ночная жизнь ${c.gen}: свет, безопасность, тишина`,
+          summary: `Как освещение меняет маршруты и ощущение «своего» места. Свяжите наблюдения с ${c.goal}.`
+        },
+        {
+          title: `От эскиза к луже: чему учит реализация ${c.gen}`,
+          summary: `Закулисье согласований, бюджета и эксплуатации. Для ${c.who} — честный рассказ о компромиссах.`
+        }
+      ].map((item, i) => ({ ...item, format: FORMATS[i % FORMATS.length] }));
+    }
+
+    function generatePosts(s) {
+      const c = ctx(s);
+      c.acc = c.nom;
+      const ideas = pick(postPool(c), 5);
+      return { type: "posts", title: "5 идей постов", ideas, settings: s };
+    }
+
+    function generateStories(s) {
+      const c = ctx(s);
+      const stories = [
+        {
+          kind: "Опрос о городской среде",
+          frames: [
+            `Кадр 1. Фото ${c.gen} утром: люди уже выбрали места — или пространство пусто.`,
+            `Кадр 2. Вопрос крупно: «Что для вас главное ${c.loc}?»`,
+            `Кадр 3. Три варианта: тень и сидение / понятный маршрут / ощущение безопасности.`,
+            `Кадр 4. Короткая подпись: как архитектор читает эти ответы.`
+          ],
+          question: `Где в вашем районе ${c.nom} работает лучше всего — и почему?`
+        },
+        {
+          kind: "Мини-разбор пространства",
+          frames: [
+            `Кадр 1. План-схема ${c.gen} в три линии: вход, центр, край.`,
+            `Кадр 2. Одна удачная деталь: скамья, дерево, поворот покрытия.`,
+            `Кадр 3. Одна ошибка: разрыв маршрута, слепое место, шум.`,
+            `Кадр 4. Вывод в одном предложении ${c.tone}.`
+          ],
+          question: `Какой элемент ${c.gen} вы бы убрали первым?`
+        },
+        {
+          kind: "Закулисье проектирования",
+          frames: [
+            `Кадр 1. Черновик: след от карандаша, пометка на плане ${c.gen}.`,
+            `Кадр 2. Ограничение, которое не видно в рендере: бюджет, сети, согласование.`,
+            `Кадр 3. Решение, которым гордитесь — даже если оно скромное.`,
+            `Кадр 4. Приглашение: «спросите, как мы к этому пришли».`
+          ],
+          question: `Что вам интереснее: процесс проектирования или результат ${c.loc}?`
+        }
+      ];
+      return { type: "stories", title: "3 идеи сторис", stories, settings: s };
+    }
+
+    function weekDays() {
+      const names = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+      const now = new Date();
+      const mondayOffset = (now.getDay() + 6) % 7;
+      const monday = new Date(now);
+      monday.setDate(now.getDate() - mondayOffset);
+      return names.map((name, i) => {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        return `${name}, ${d.getDate()}.${String(d.getMonth() + 1).padStart(2, "0")}`;
+      });
+    }
+
+    function generatePlan(s) {
+      const c = ctx(s);
+      const days = weekDays();
+      const rows = [
+        { topic: `Экспертный разбор: границы и входы ${c.gen}`, format: "Карусель", intent: "Показать метод чтения пространства", kind: "экспертный разбор" },
+        { topic: `Наблюдение: кто и как пользуется ${c.ins} в обед`, format: "Пост с фото", intent: "Собрать живые детали дня", kind: "наблюдение за городом" },
+        { topic: `Проектный фрагмент: одно решение, которое спасло сценарий`, format: "Кейс", intent: GOALS[s.goal], kind: "проект" },
+        { topic: `Вовлечение: опрос о комфорте ${c.gen}`, format: "Сторис-опрос", intent: "Получить ответы ${c.who}", kind: "вовлекающий контент" },
+        { topic: `Экспертный разбор: свет, тень и микроклимат ${c.loc}`, format: "Длинный пост", intent: "Укрепить экспертный голос", kind: "экспертный разбор" },
+        { topic: `Городская заметка: маршрут выходного дня через ${c.nom}`, format: "Короткий пост", intent: "Показать пространство глазами человека", kind: "наблюдение за городом" },
+        { topic: `Итог недели: чему научил ${c.nom} и что спросить у аудитории`, format: "Сторис + пост", intent: "Закрыть неделю диалогом", kind: "вовлекающий контент" }
+      ].map((row, i) => ({ ...row, day: days[i] }));
+      return { type: "plan", title: "Контент-план на неделю", rows, settings: s };
+    }
+
+    const resultEl = document.getElementById("result");
+    const bodyEl = document.getElementById("result-body");
+    const titleEl = document.getElementById("result-title");
+    const actionsEl = document.getElementById("result-actions");
+    let current = null;
+    let lastType = "posts";
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function renderPosts(data) {
+      return data.ideas.map((idea, i) => `
+        <article class="idea">
+          <p class="meta">${i + 1} · ${escapeHtml(idea.format)}</p>
+          <h3>${escapeHtml(idea.title)}</h3>
+          <p>${escapeHtml(idea.summary)}</p>
+        </article>
+      `).join("");
+    }
+
+    function renderStories(data) {
+      return data.stories.map((st) => `
+        <article class="idea">
+          <p class="meta">${escapeHtml(st.kind)}</p>
+          <ul class="frames">
+            ${st.frames.map((f, i) => `<li data-n="${String(i + 1).padStart(2, "0")}">${escapeHtml(f)}</li>`).join("")}
+          </ul>
+          <p><strong>Вопрос аудитории:</strong> ${escapeHtml(st.question)}</p>
+        </article>
+      `).join("");
+    }
+
+    function renderPlan(data) {
+      return `
+        <table>
+          <thead>
+            <tr><th>День</th><th>Тема</th><th>Формат</th><th>Цель</th></tr>
+          </thead>
+          <tbody>
+            ${data.rows.map((r) => `
+              <tr>
+                <td data-label="День">${escapeHtml(r.day)}<br><span class="meta">${escapeHtml(r.kind)}</span></td>
+                <td data-label="Тема">${escapeHtml(r.topic)}</td>
+                <td data-label="Формат">${escapeHtml(r.format)}</td>
+                <td data-label="Цель">${escapeHtml(r.intent)}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function toText(data) {
+      if (data.type === "posts") {
+        return data.ideas.map((i, n) => `${n + 1}. ${i.title}\nФормат: ${i.format}\n${i.summary}`).join("\n\n");
+      }
+      if (data.type === "stories") {
+        return data.stories.map((s) => `${s.kind}\n${s.frames.join("\n")}\nВопрос: ${s.question}`).join("\n\n");
+      }
+      return data.rows.map((r) => `${r.day} (${r.kind})\n${r.topic}\nФормат: ${r.format}. Цель: ${r.intent}`).join("\n\n");
+    }
+
+    function showError(message) {
+      resultEl.setAttribute("aria-busy", "false");
+      actionsEl.hidden = true;
+      bodyEl.innerHTML = `<p class="error" role="alert">${escapeHtml(message)}</p>`;
+    }
+
+    async function runGenerate(type) {
+      lastType = type;
+      resultEl.setAttribute("aria-busy", "true");
+      actionsEl.hidden = true;
+      titleEl.textContent = "Генерация…";
+      bodyEl.innerHTML = `<div class="loader"><span class="spinner" aria-hidden="true"></span><span>Собираем слой идей…</span></div>`;
+      document.querySelectorAll("[data-gen]").forEach((b) => { b.disabled = true; });
+
+      try {
+        await new Promise((resolve, reject) => {
+          window.setTimeout(() => {
+            if (Math.random() < 0) reject(new Error("network"));
+            resolve();
+          }, 650);
+        });
+        const s = settings();
+        const data = type === "posts" ? generatePosts(s) : type === "stories" ? generateStories(s) : generatePlan(s);
+        current = { ...data, id: String(Date.now()) };
+        titleEl.textContent = data.title;
+        bodyEl.innerHTML = type === "posts" ? renderPosts(data) : type === "stories" ? renderStories(data) : renderPlan(data);
+        actionsEl.hidden = false;
+        updateFavButton();
+        resultEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      } catch (err) {
+        showError("Не удалось получить результат. Проверьте соединение и нажмите кнопку ещё раз.");
+      } finally {
+        resultEl.setAttribute("aria-busy", "false");
+        document.querySelectorAll("[data-gen]").forEach((b) => { b.disabled = false; });
+      }
+    }
+
+    function loadSettings() {
+      try {
+        const raw = localStorage.getItem(STORAGE_SETTINGS);
+        if (!raw) return;
+        const s = JSON.parse(raw);
+        ["space", "audience", "goal", "tone"].forEach((key) => {
+          if (s[key] && document.getElementById(key)) document.getElementById(key).value = s[key];
+        });
+      } catch (_) { /* ignore broken storage */ }
+    }
+
+    function saveSettings() {
+      localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings()));
+    }
+
+    function loadFavs() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_FAVS) || "[]");
+      } catch (_) {
+        return [];
+      }
+    }
+
+    function saveFavs(list) {
+      localStorage.setItem(STORAGE_FAVS, JSON.stringify(list));
+    }
+
+    function updateFavButton() {
+      const btn = document.getElementById("fav-btn");
+      const favs = loadFavs();
+      const saved = current && favs.some((f) => f.id === current.id);
+      btn.textContent = saved ? "В избранном" : "В избранное";
+      btn.disabled = Boolean(saved);
+    }
+
+    function renderFavs() {
+      const list = loadFavs();
+      const box = document.getElementById("fav-list");
+      if (!list.length) {
+        box.innerHTML = `<p class="hint">Пока пусто. Сгенерируйте идеи и нажмите «В избранное».</p>`;
+        return;
+      }
+      box.innerHTML = list.map((item) => `
+        <article class="fav-item">
+          <header>
+            <strong>${escapeHtml(item.title)}</strong>
+            <button class="btn btn-ghost" type="button" data-remove="${escapeHtml(item.id)}">Удалить</button>
+          </header>
+          <p class="meta">${new Date(Number(item.id)).toLocaleString("ru-RU")}</p>
+          <pre style="white-space:pre-wrap;font:inherit;font-size:15px;">${escapeHtml(toText(item))}</pre>
+        </article>
+      `).join("");
+    }
+
+    document.getElementById("settings").addEventListener("change", saveSettings);
+
+    document.querySelectorAll("[data-gen]").forEach((btn) => {
+      btn.addEventListener("click", () => runGenerate(btn.dataset.gen));
+    });
+
+    document.getElementById("copy-btn").addEventListener("click", async () => {
+      if (!current) return;
+      try {
+        await navigator.clipboard.writeText(toText(current));
+        document.getElementById("copy-btn").textContent = "Скопировано";
+        window.setTimeout(() => { document.getElementById("copy-btn").textContent = "Скопировать"; }, 1600);
+      } catch (_) {
+        document.getElementById("copy-btn").textContent = "Не скопировалось";
+        window.setTimeout(() => { document.getElementById("copy-btn").textContent = "Скопировать"; }, 1800);
+      }
+    });
+
+    document.getElementById("again-btn").addEventListener("click", () => runGenerate(lastType));
+
+    document.getElementById("fav-btn").addEventListener("click", () => {
+      if (!current) return;
+      const list = loadFavs();
+      if (list.some((f) => f.id === current.id)) return;
+      list.unshift(current);
+      saveFavs(list.slice(0, 30));
+      updateFavButton();
+      renderFavs();
+    });
+
+    document.getElementById("fav-list").addEventListener("click", (e) => {
+      const id = e.target.dataset.remove;
+      if (!id) return;
+      saveFavs(loadFavs().filter((f) => f.id !== id));
+      renderFavs();
+      updateFavButton();
+    });
+
+    function showView(name) {
+      const gen = name === "gen";
+      document.getElementById("view-gen").classList.toggle("hidden", !gen);
+      document.getElementById("view-fav").classList.toggle("hidden", gen);
+      document.getElementById("result").classList.toggle("hidden", !gen);
+      document.getElementById("nav-gen").setAttribute("aria-current", gen ? "page" : "false");
+      document.getElementById("nav-fav").setAttribute("aria-current", gen ? "false" : "page");
+      if (!gen) renderFavs();
+    }
+
+    document.getElementById("nav-gen").addEventListener("click", () => showView("gen"));
+    document.getElementById("nav-fav").addEventListener("click", () => showView("fav"));
+
+    loadSettings();
+    renderFavs();
+  </script>
+</body>
+</html>
